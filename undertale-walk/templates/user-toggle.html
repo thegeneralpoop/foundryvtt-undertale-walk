@@ -1,0 +1,15 @@
+<form autocomplete="off">
+  <div class="form-group">
+    {{#each users}}
+      <div>
+        <label>
+          <input type="checkbox" name="{{this.id}}" {{#if this.enabled}}checked{{/if}} />
+          {{this.name}}
+        </label>
+      </div>
+    {{/each}}
+  </div>
+  <footer class="sheet-footer flexrow">
+    <button type="submit" class="button">Save</button>
+  </footer>
+</form>
