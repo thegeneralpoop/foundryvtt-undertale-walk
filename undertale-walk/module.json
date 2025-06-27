@@ -13,6 +13,6 @@
   "packs": [],
   "systems": [],
   "dependencies": [],
-  "manifest": "modules/undertale-walk/module.json",
-  "download": "https://your-hosting-url.com/undertale-walk.zip"
+  "manifest": "https://raw.githubusercontent.com/thegeneralpoop/foundryvtt-undertale-walk/main/module.json",
+  "download": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/archive/refs/heads/main.zip"
 }
