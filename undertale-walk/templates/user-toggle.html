@@ -1,15 +1,13 @@
-<form autocomplete="off">
-  <div class="form-group">
-    {{#each users}}
-      <div>
-        <label>
-          <input type="checkbox" name="{{this.id}}" {{#if this.enabled}}checked{{/if}} />
-          {{this.name}}
+<form>
+  <fieldset>
+    <legend>Enable Walk Animation Per Player</legend>
+    <div class="form-group">
+      {{#each users}}
+        <label style="display: flex; align-items: center; margin-bottom: 8px;">
+          <input type="checkbox" name="{{id}}" value="true" {{#if enabled}}checked{{/if}} />
+          <span style="margin-left: 8px;">{{name}}</span>
         </label>
-      </div>
-    {{/each}}
-  </div>
-  <footer class="sheet-footer flexrow">
-    <button type="submit" class="button">Save</button>
-  </footer>
+      {{/each}}
+    </div>
+  </fieldset>
 </form>
