@@ -78,11 +78,10 @@ Hooks.once("ready", async () => {
 
   window.addEventListener("keydown", async (event) => {
     const key = event.key;
-    if (event.repeat) return; // Ignore key repeat to prevent multiple moves
     if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
 
     const token = canvas.tokens.controlled[0];
-    if (!token) return;
+    if (!token || !token.document) return;
 
     lastDirection = key;
     clearTimeout(idleTimeout);
@@ -91,14 +90,17 @@ Hooks.once("ready", async () => {
     const dx = (key === "ArrowLeft") ? -1 : (key === "ArrowRight") ? 1 : 0;
     const dy = (key === "ArrowUp") ? -1 : (key === "ArrowDown") ? 1 : 0;
 
-    await token.update({
-      texture: { src: walkAnimations[key] },
-      x: token.x + dx * gridSize,
-      y: token.y + dy * gridSize
+    await token.document.update({
+      texture: { src: walkAnimations[key] }
+    });
+
+    await token.document.update({
+      x: token.document.x + dx * gridSize,
+      y: token.document.y + dy * gridSize
     });
 
     idleTimeout = setTimeout(() => {
-      token.update({
+      token.document.update({
         texture: { src: idleAnimations[lastDirection] }
       });
     }, 300);
