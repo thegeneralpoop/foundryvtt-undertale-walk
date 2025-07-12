@@ -12,8 +12,8 @@
     "minimum": "11",
     "verified": "12"
   },
-  "url": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/tree/thegeneralpoop-patch-1.0.3",                // ← Project home page (GitHub or personal site)
-  "manifest": "https://yourhost.com/modules/undertale-walk/module.json", // ← URL to this JSON file
+  "url": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/tree/thegeneralpoop-patch-1.0.3",
+  "manifest": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/raw/refs/heads/thegeneralpoop-patch-1.0.3/undertale-walk/module.json",
   "download": "https://yourhost.com/modules/undertale-walk.zip",         // ← Direct .zip URL of your module
   "scripts": ["main.js"]
 }
