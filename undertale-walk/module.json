@@ -4,12 +4,16 @@
   "description": "A pixel RPG walking system with directional animations and idle poses, toggleable per player by the GM.",
   "authors": [
     {
-    "name": "thegeneralpoop"
+      "name": "thegeneralpoop"
     }
   ],
   "version": "1.0.3",
   "compatibility": {
     "minimum": "11",
     "verified": "12"
-  }
+  },
+  "url": "https://github.com/yourusername/undertale-walk",                // ← Project home page (GitHub or personal site)
+  "manifest": "https://yourhost.com/modules/undertale-walk/module.json", // ← URL to this JSON file
+  "download": "https://yourhost.com/modules/undertale-walk.zip",         // ← Direct .zip URL of your module
+  "scripts": ["main.js"]
 }
