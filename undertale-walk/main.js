@@ -17,6 +17,15 @@ Hooks.once("init", () => {
     type: Array,
     default: []
   });
+
+  game.settings.register("undertale-walk", "allowGMs", {
+    name: "Allow GMs to Use Walk Animation",
+    hint: "If enabled, GMs will also use the Undertale-style walk animation.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 });
 
 // ==========================
@@ -55,58 +64,78 @@ class UserToggleForm extends FormApplication {
 // ==========================
 // 🚶 Player-Side Animation Logic
 // ==========================
+let idleTimeout = null;
+let lastDirection = "ArrowDown";
+let keyListener = null;
+
+const walkAnimations = {
+  ArrowUp: "modules/undertale-walk/animations/walk_up.webm",
+  ArrowDown: "modules/undertale-walk/animations/walk_down.webm",
+  ArrowLeft: "modules/undertale-walk/animations/walk_left.webm",
+  ArrowRight: "modules/undertale-walk/animations/walk_right.webm"
+};
+
+const idleAnimations = {
+  ArrowUp: "modules/undertale-walk/animations/idle_up.webp",
+  ArrowDown: "modules/undertale-walk/animations/idle_down.webp",
+  ArrowLeft: "modules/undertale-walk/animations/idle_left.webp",
+  ArrowRight: "modules/undertale-walk/animations/idle_right.webp"
+};
+
+// 🟢 Enable or disable walk system for this user
+function toggleWalkSystem(enabled) {
+  if (enabled && !keyListener) {
+    keyListener = async (event) => {
+      const key = event.key;
+      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
+
+      const tokens = canvas.tokens.controlled;
+      if (!tokens.length) return;
+
+      lastDirection = key;
+      clearTimeout(idleTimeout);
+
+      const gridSize = canvas.grid.size;
+      const dx = (key === "ArrowLeft") ? -1 : (key === "ArrowRight") ? 1 : 0;
+      const dy = (key === "ArrowUp") ? -1 : (key === "ArrowDown") ? 1 : 0;
+
+      for (let token of tokens) {
+        if (!token?.document) continue;
+
+        await token.document.update({
+          texture: { src: walkAnimations[key] },
+          x: token.document.x + dx * gridSize,
+          y: token.document.y + dy * gridSize
+        });
+
+        idleTimeout = setTimeout(() => {
+          token.document.update({
+            texture: { src: idleAnimations[lastDirection] }
+          });
+        }, 300);
+      }
+    };
+    window.addEventListener("keydown", keyListener);
+  } else if (!enabled && keyListener) {
+    window.removeEventListener("keydown", keyListener);
+    keyListener = null;
+  }
+}
+
+// 🟢 Set up walk system on ready
 Hooks.once("ready", async () => {
   const enabledUsers = game.settings.get("undertale-walk", "enabledUsers") || [];
+  const gmAllowed = game.settings.get("undertale-walk", "allowGMs");
+  const isEnabled = (game.user.isGM && gmAllowed) || enabledUsers.includes(game.user.id);
+  toggleWalkSystem(isEnabled);
+});
 
-  // Allow GMs to optionally test the system
-  if (!game.user.isGM && !enabledUsers.includes(game.user.id)) return;
+// 🟢 React to setting changes live
+Hooks.on("settings.set", (setting) => {
+  if (!["undertale-walk.enabledUsers", "undertale-walk.allowGMs"].includes(setting.key)) return;
 
-  let idleTimeout = null;
-  let lastDirection = "ArrowDown";
-
-  const walkAnimations = {
-    ArrowUp: "modules/undertale-walk/animations/walk_up.webm",
-    ArrowDown: "modules/undertale-walk/animations/walk_down.webm",
-    ArrowLeft: "modules/undertale-walk/animations/walk_left.webm",
-    ArrowRight: "modules/undertale-walk/animations/walk_right.webm"
-  };
-
-  const idleAnimations = {
-    ArrowUp: "modules/undertale-walk/animations/idle_up.webp",
-    ArrowDown: "modules/undertale-walk/animations/idle_down.webp",
-    ArrowLeft: "modules/undertale-walk/animations/idle_left.webp",
-    ArrowRight: "modules/undertale-walk/animations/idle_right.webp"
-  };
-
-  window.addEventListener("keydown", async (event) => {
-    const key = event.key;
-    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
-
-    const tokens = canvas.tokens.controlled;
-    if (!tokens.length) return;
-
-    lastDirection = key;
-    clearTimeout(idleTimeout);
-
-    const gridSize = canvas.grid.size;
-    const dx = (key === "ArrowLeft") ? -1 : (key === "ArrowRight") ? 1 : 0;
-    const dy = (key === "ArrowUp") ? -1 : (key === "ArrowDown") ? 1 : 0;
-
-    for (let token of tokens) {
-      if (!token?.document) continue;
-
-      await token.document.update({
-        texture: { src: walkAnimations[key] },
-        x: token.document.x + dx * gridSize,
-        y: token.document.y + dy * gridSize
-      });
-
-      // Reset to idle after 300ms
-      idleTimeout = setTimeout(() => {
-        token.document.update({
-          texture: { src: idleAnimations[lastDirection] }
-        });
-      }, 300);
-    }
-  });
+  const enabledUsers = game.settings.get("undertale-walk", "enabledUsers") || [];
+  const gmAllowed = game.settings.get("undertale-walk", "allowGMs");
+  const isEnabled = (game.user.isGM && gmAllowed) || enabledUsers.includes(game.user.id);
+  toggleWalkSystem(isEnabled);
 });
