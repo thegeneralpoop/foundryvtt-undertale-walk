@@ -19,6 +19,6 @@
   "languages": [],
   "packs": [],
   "url": "",
-  "manifest": "https://yourmoduleurl.com/module.json",
+  "manifest": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/raw/refs/heads/main/undertale-walk/module.json",
   "download": ""
 }
