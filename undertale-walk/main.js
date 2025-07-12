@@ -57,7 +57,9 @@ class UserToggleForm extends FormApplication {
 // ==========================
 Hooks.once("ready", async () => {
   const enabledUsers = game.settings.get("undertale-walk", "enabledUsers") || [];
-  if (!enabledUsers.includes(game.user.id)) return;
+
+  // Allow GMs to optionally test the system
+  if (!game.user.isGM && !enabledUsers.includes(game.user.id)) return;
 
   let idleTimeout = null;
   let lastDirection = "ArrowDown";
@@ -80,8 +82,8 @@ Hooks.once("ready", async () => {
     const key = event.key;
     if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
 
-    const token = canvas.tokens.controlled[0];
-    if (!token || !token.document) return;
+    const tokens = canvas.tokens.controlled;
+    if (!tokens.length) return;
 
     lastDirection = key;
     clearTimeout(idleTimeout);
@@ -90,19 +92,21 @@ Hooks.once("ready", async () => {
     const dx = (key === "ArrowLeft") ? -1 : (key === "ArrowRight") ? 1 : 0;
     const dy = (key === "ArrowUp") ? -1 : (key === "ArrowDown") ? 1 : 0;
 
-    await token.document.update({
-      texture: { src: walkAnimations[key] }
-    });
+    for (let token of tokens) {
+      if (!token?.document) continue;
 
-    await token.document.update({
-      x: token.document.x + dx * gridSize,
-      y: token.document.y + dy * gridSize
-    });
-
-    idleTimeout = setTimeout(() => {
-      token.document.update({
-        texture: { src: idleAnimations[lastDirection] }
+      await token.document.update({
+        texture: { src: walkAnimations[key] },
+        x: token.document.x + dx * gridSize,
+        y: token.document.y + dy * gridSize
       });
-    }, 300);
+
+      // Reset to idle after 300ms
+      idleTimeout = setTimeout(() => {
+        token.document.update({
+          texture: { src: idleAnimations[lastDirection] }
+        });
+      }, 300);
+    }
   });
 });
