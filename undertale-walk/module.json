@@ -12,7 +12,7 @@
     "minimum": "11",
     "verified": "12"
   },
-  "url": "https://github.com/yourusername/undertale-walk",                // ← Project home page (GitHub or personal site)
+  "url": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/tree/thegeneralpoop-patch-1.0.3",                // ← Project home page (GitHub or personal site)
   "manifest": "https://yourhost.com/modules/undertale-walk/module.json", // ← URL to this JSON file
   "download": "https://yourhost.com/modules/undertale-walk.zip",         // ← Direct .zip URL of your module
   "scripts": ["main.js"]
