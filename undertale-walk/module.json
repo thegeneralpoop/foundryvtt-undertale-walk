@@ -1,18 +1,15 @@
 {
-  "name": "undertale-walk",
-  "title": "Undertale-Style Walking",
+  "id": "undertale-walk",
+  "title": "Undertale Style Walking",
   "description": "A pixel RPG walking system with directional animations and idle poses, toggleable per player by the GM.",
+  "authors": [
+    {
+    "name": "thegeneralpoop"
+    }
+  ],
   "version": "1.0.3",
-  "author": "Your Name Here",
-  "minimumCoreVersion": "11",
-  "compatibleCoreVersion": "12",
-  "scripts": ["main.js"],
-  "template": "templates/user-toggle.html",
-  "esmodules": [],
-  "styles": [],
-  "packs": [],
-  "systems": [],
-  "dependencies": [],
-  "manifest": "https://raw.githubusercontent.com/thegeneralpoop/foundryvtt-undertale-walk/main/module.json",
-  "download": "https://github.com/thegeneralpoop/foundryvtt-undertale-walk/archive/refs/heads/main.zip"
+  "compatibility": {
+    "minimum": "11",
+    "verified": "12"
+  }
 }
