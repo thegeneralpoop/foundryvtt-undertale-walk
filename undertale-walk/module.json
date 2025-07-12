@@ -2,7 +2,7 @@
   "name": "undertale-walk",
   "title": "Undertale-Style Walking",
   "description": "A pixel RPG walking system with directional animations and idle poses, toggleable per player by the GM.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Your Name Here",
   "minimumCoreVersion": "11",
   "compatibleCoreVersion": "12",
